@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
-const userRoutes = require('./routes/userRoutes');
-const companyRoutes = require('./routes/companyRoutes');
-const matchingRoutes = require('./routes/matchingRoutes');
+const userRoutes = require('./backend/routes/userRoutes');
+const companyRoutes = require('./backend/routes/companyRoutes');
+const matchingRoutes = require('./backend/routes/matchingRoutes');
 
-dotenv.config();
+dotenv.config(); // Ensure this line is at the top
 
 const app = express();
 
@@ -31,8 +31,17 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 // Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 5001;
+const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+// Handle server errors
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use.`);
+    } else {
+        console.error(`Server error: ${err.message}`);
+    }
+    process.exit(1);
+});
