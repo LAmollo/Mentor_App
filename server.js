@@ -7,7 +7,10 @@ const userRoutes = require('./backend/routes/userRoutes');
 const companyRoutes = require('./backend/routes/companyRoutes');
 const matchingRoutes = require('./backend/routes/matchingRoutes');
 
-dotenv.config(); // Ensure this line is at the top
+dotenv.config();
+
+// Debugging: Check if MONGO_URI is correctly loaded
+console.log('Mongo URI:', process.env.MONGO_URI);
 
 const app = express();
 
@@ -22,8 +25,7 @@ app.use('/api/matching', matchingRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // Removed deprecated options
 }).then(() => {
     console.log('Connected to MongoDB');
 }).catch((error) => {
