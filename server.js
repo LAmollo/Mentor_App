@@ -1,16 +1,13 @@
+const dotenv = require('dotenv');
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const cors = require('cors');
+
+dotenv.config(); // Load environment variables
 
 const userRoutes = require('./backend/routes/userRoutes');
 const companyRoutes = require('./backend/routes/companyRoutes');
 const matchingRoutes = require('./backend/routes/matchingRoutes');
-
-dotenv.config();
-
-// Debugging: Check if MONGO_URI is correctly loaded
-console.log('Mongo URI:', process.env.MONGO_URI);
 
 const app = express();
 
@@ -24,8 +21,10 @@ app.use('/api/companies', companyRoutes);
 app.use('/api/matching', matchingRoutes);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
+const MONGO_URI = process.env.MONGO_URI;
+mongoose.connect(MONGO_URI, {
     // Removed deprecated options
+    serverSelectionTimeoutMS: 50000 // Increase timeout if necessary
 }).then(() => {
     console.log('Connected to MongoDB');
 }).catch((error) => {
@@ -47,3 +46,4 @@ server.on('error', (err) => {
     }
     process.exit(1);
 });
+
