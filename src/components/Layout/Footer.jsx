@@ -5,7 +5,7 @@ import React from 'react';
 function Footer() {
     return (
         <footer>
-            <p>&copy; 2024 Student Career Matching App</p>
+            <p>&copy; 2024 Career App</p>
         </footer>
     );
 }

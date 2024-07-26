@@ -1,5 +1,6 @@
 /* src/index.css */
 
+/* Global resets and base styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -7,15 +8,17 @@ body {
   box-sizing: border-box;
 }
 
+/* Header styling */
 header {
-  background-color: #282c34;
+  background-color: #2f2f2f; /* Lyft dark background color */
   padding: 20px;
   color: white;
   text-align: center;
 }
 
+/* Footer styling */
 footer {
-  background-color: #282c34;
+  background-color: #2f2f2f; /* Lyft dark background color */
   padding: 10px;
   color: white;
   text-align: center;
@@ -24,8 +27,9 @@ footer {
   bottom: 0;
 }
 
+/* Navigation styling */
 nav {
-  background-color: #61dafb;
+  background-color: #ff00bf; /* Lyft pink color */
   padding: 10px;
 }
 
@@ -43,17 +47,19 @@ nav ul li {
 
 nav ul li a {
   text-decoration: none;
-  color: #282c34;
+  color: #2f2f2f; /* Lyft dark text color */
 }
 
 nav ul li a:hover {
   text-decoration: underline;
 }
 
+/* Headings margin */
 h1, h2, h3, h4, h5, h6 {
   margin: 10px 0;
 }
 
+/* Form styling */
 form {
   display: flex;
   flex-direction: column;
@@ -70,11 +76,11 @@ input {
 button {
   padding: 10px;
   font-size: 16px;
-  background-color: #61dafb;
+  background-color: #ff00bf; /* Lyft pink color */
   border: none;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #21a1f1;
+  background-color: #e40084; /* Lyft darker pink color on hover */
 }

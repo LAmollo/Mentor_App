@@ -13,15 +13,18 @@ function StudentDashboard() {
     }, [dispatch]);
 
     return (
-        <div>
+        <div className="dashboard">
             <h1>Student Dashboard</h1>
             {status === 'loading' && <p>Loading...</p>}
             {status === 'failed' && <p>{error}</p>}
             {status === 'succeeded' && profile && (
-                <div>
-                    <h2>{profile.name}</h2>
-                    <p>Email: {profile.email}</p>
-                    {/* Add more profile details and functionalities here */}
+                <div className="dashboard-content">
+                    <div>
+                        <h2>{profile.name}</h2>
+                        <p>Email: {profile.email}</p>
+                        {/* Add more profile details and functionalities here */}
+                    </div>
+                    {/* Add more dashboard widgets/components here */}
                 </div>
             )}
         </div>

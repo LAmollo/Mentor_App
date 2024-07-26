@@ -12,6 +12,9 @@ import Navbar from './components/Layout/Navbar';
 import StudentDashboard from './components/Dashboard/StudentDashboard';
 import CompanyDashboard from './components/Dashboard/CompanyDashboard';
 import MentorMatching from './components/Dashboard/MentorMatching';
+import ProfileForm from './components/Profile/ProfileForm';
+import ProfileView from './components/Profile/ProfileView';
+import ActivityForm from './components/Profile/ActivityForm';
 
 function App() {
     return (
@@ -27,6 +30,9 @@ function App() {
                 <Route path="/dashboard/student" element={<StudentDashboard />} />
                 <Route path="/dashboard/company" element={<CompanyDashboard />} />
                 <Route path="/dashboard/mentor-matching" element={<MentorMatching />} />
+                <Route path="/profile/form" element={<ProfileForm />} />
+                <Route path="/profile/view/:userId" element={<ProfileView />} />
+                <Route path="/profile/activity/:userId" element={<ActivityForm />} />
             </Routes>
             <Footer />
         </Router>
