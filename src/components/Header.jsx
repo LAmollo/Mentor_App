@@ -16,7 +16,7 @@ const Header = () => {
 
   return (
     <header>
-      <h1>Student Career Matching App</h1>
+      <h1>Mentor App</h1>
       <Navbar />
       <div className="auth-links">
         {user ? (

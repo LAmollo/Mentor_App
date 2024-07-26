@@ -1,86 +1,137 @@
-/* src/index.css */
-
-/* Global resets and base styles */
+/* General Styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  background-color: #f4f4f4;
 }
 
-/* Header styling */
+/* Header Styles */
 header {
-  background-color: #2f2f2f; /* Lyft dark background color */
-  padding: 20px;
+  background-color: #333;
   color: white;
-  text-align: center;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Footer styling */
-footer {
-  background-color: #2f2f2f; /* Lyft dark background color */
-  padding: 10px;
+header h1 {
+  margin: 0;
+}
+
+.auth-links a,
+.auth-links button {
   color: white;
+  margin-right: 15px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-links button {
+  background-color: #f44;
+  padding: 5px 10px;
+}
+
+/* Navbar Styles */
+nav {
+  background-color: #444;
+  padding: 10px 0;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav li {
+  margin-right: 15px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 15px;
+  display: block;
+}
+
+nav a:hover {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+/* Footer Styles */
+footer {
+  background-color: #333;
+  color: white;
+  padding: 20px;
   text-align: center;
   position: fixed;
   width: 100%;
   bottom: 0;
 }
 
-/* Navigation styling */
-nav {
-  background-color: #ff00bf; /* Lyft pink color */
-  padding: 10px;
-}
-
-nav ul {
-  list-style-type: none;
+footer p {
   margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-around;
 }
 
-nav ul li {
-  margin: 0 10px;
-}
-
-nav ul li a {
+footer a {
+  color: white;
   text-decoration: none;
-  color: #2f2f2f; /* Lyft dark text color */
 }
 
-nav ul li a:hover {
+footer a:hover {
   text-decoration: underline;
 }
 
-/* Headings margin */
-h1, h2, h3, h4, h5, h6 {
-  margin: 10px 0;
-}
-
-/* Form styling */
+/* Form Styles */
 form {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-input {
-  margin: 5px 0;
-  padding: 10px;
-  font-size: 16px;
+form h2 {
+  margin-top: 0;
 }
 
-button {
+form input {
+  display: block;
+  width: 100%;
   padding: 10px;
-  font-size: 16px;
-  background-color: #ff00bf; /* Lyft pink color */
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+form button {
+  background-color: #28a745;
+  color: white;
   border: none;
+  padding: 10px;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-button:hover {
-  background-color: #e40084; /* Lyft darker pink color on hover */
+form button:hover {
+  background-color: #218838;
+}
+
+/* Main Content */
+main {
+  padding: 20px;
+  margin-bottom: 60px; /* Space for fixed footer */
+}
+
+/* Loading and Error Messages */
+p {
+  font-size: 1.2em;
 }
