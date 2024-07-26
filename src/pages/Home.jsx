@@ -1,13 +1,14 @@
-// src/pages/Home.jsx
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-function Home() {
-    return (
-        <div>
-            <h1>Welcome to Career App</h1>
-        </div>
-    );
-}
+const Home = () => {
+  return (
+    <div>
+      <h1>Welcome to the Student Career Matching App</h1>
+      <Link to="/login">Login</Link>
+      <Link to="/register">Register</Link>
+    </div>
+  );
+};
 
 export default Home;

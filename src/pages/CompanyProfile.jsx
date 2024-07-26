@@ -1,14 +1,13 @@
-// src/pages/CompanyProfile.jsx
-
 import React from 'react';
+import CompanyDashboard from '../components/CompanyDashboard';
 
-function CompanyProfile() {
-    return (
-        <div>
-            <h1>Company Profile</h1>
-            {/* Add company profile details here */}
-        </div>
-    );
-}
+const CompanyProfile = () => {
+  return (
+    <div>
+      <h1>Company Profile</h1>
+      <CompanyDashboard />
+    </div>
+  );
+};
 
 export default CompanyProfile;

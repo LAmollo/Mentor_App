@@ -1,19 +1,13 @@
-// src/pages/Register.jsx
-
 import React from 'react';
+import RegisterForm from '../components/RegisterForm';
 
-function Register() {
-    return (
-        <div>
-            <h1>Register</h1>
-            <form>
-                <input type="text" placeholder="Name" required />
-                <input type="email" placeholder="Email" required />
-                <input type="password" placeholder="Password" required />
-                <button type="submit">Register</button>
-            </form>
-        </div>
-    );
-}
+const Register = () => {
+  return (
+    <div>
+      <h1>Register</h1>
+      <RegisterForm />
+    </div>
+  );
+};
 
 export default Register;
