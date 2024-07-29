@@ -1,17 +1,21 @@
 const mongoose = require('mongoose');
 
-const companySchema = mongoose.Schema(
+const studentSchema = mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
     },
-    industry: {
+    university: {
       type: String,
       required: true,
     },
-    description: {
+    major: {
       type: String,
+      required: true,
+    },
+    activities: {
+      type: [String],
       required: true,
     },
   },
@@ -20,6 +24,6 @@ const companySchema = mongoose.Schema(
   }
 );
 
-const Company = mongoose.model('Company', companySchema);
+const Student = mongoose.model('Student', studentSchema);
 
-module.exports = Company;
+module.exports = Student;

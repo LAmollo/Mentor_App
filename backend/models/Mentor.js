@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 
-const companySchema = mongoose.Schema(
+const mentorSchema = mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
     },
-    industry: {
+    company: {
       type: String,
       required: true,
     },
-    description: {
-      type: String,
+    expertise: {
+      type: [String],
       required: true,
     },
   },
@@ -20,6 +20,6 @@ const companySchema = mongoose.Schema(
   }
 );
 
-const Company = mongoose.model('Company', companySchema);
+const Mentor = mongoose.model('Mentor', mentorSchema);
 
-module.exports = Company;
+module.exports = Mentor;

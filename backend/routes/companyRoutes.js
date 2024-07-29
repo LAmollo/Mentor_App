@@ -1,12 +1,19 @@
-// routes/companyRoutes.js
 const express = require('express');
 const router = express.Router();
-const { createCompany, getCompany, updateCompany, deleteCompany } = require('../controllers/companyController');
-const authMiddleware = require('../middleware/authMiddleware');
+const {
+  getCompanies,
+  getCompanyById,
+  createCompany,
+  updateCompany,
+  deleteCompany,
+} = require('../controllers/companyController');
+const { protect, admin } = require('../middleware/authMiddleware');
 
-router.post('/', authMiddleware, createCompany);
-router.get('/:id', getCompany);
-router.put('/:id', authMiddleware, updateCompany);
-router.delete('/:id', authMiddleware, deleteCompany);
+router.route('/').get(getCompanies).post(protect, admin, createCompany);
+router
+  .route('/:id')
+  .get(getCompanyById)
+  .put(protect, admin, updateCompany)
+  .delete(protect, admin, deleteCompany);
 
 module.exports = router;

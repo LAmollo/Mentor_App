@@ -1,52 +1,84 @@
-// controllers/companyController.js
+const asyncHandler = require('express-async-handler');
 const Company = require('../models/Company');
 
-// Create a new company
-exports.createCompany = async (req, res) => {
-  try {
-    const company = new Company(req.body);
-    await company.save();
-    res.status(201).json(company);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+// @desc    Get all companies
+// @route   GET /api/companies
+// @access  Public
+const getCompanies = asyncHandler(async (req, res) => {
+  const companies = await Company.find({});
+  res.json(companies);
+});
 
-// Get a company by ID
-exports.getCompany = async (req, res) => {
-  try {
-    const company = await Company.findById(req.params.id);
-    if (!company) {
-      return res.status(404).json({ message: 'Company not found' });
-    }
+// @desc    Get single company
+// @route   GET /api/companies/:id
+// @access  Public
+const getCompanyById = asyncHandler(async (req, res) => {
+  const company = await Company.findById(req.params.id);
+
+  if (company) {
     res.json(company);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } else {
+    res.status(404);
+    throw new Error('Company not found');
   }
-};
+});
 
-// Update company information
-exports.updateCompany = async (req, res) => {
-  try {
-    const company = await Company.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!company) {
-      return res.status(404).json({ message: 'Company not found' });
-    }
-    res.json(company);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+// @desc    Create a company
+// @route   POST /api/companies
+// @access  Private/Admin
+const createCompany = asyncHandler(async (req, res) => {
+  const { name, industry, description } = req.body;
 
-// Delete a company
-exports.deleteCompany = async (req, res) => {
-  try {
-    const company = await Company.findByIdAndDelete(req.params.id);
-    if (!company) {
-      return res.status(404).json({ message: 'Company not found' });
-    }
-    res.json({ message: 'Company deleted' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  const company = new Company({
+    name,
+    industry,
+    description,
+  });
+
+  const createdCompany = await company.save();
+  res.status(201).json(createdCompany);
+});
+
+// @desc    Update a company
+// @route   PUT /api/companies/:id
+// @access  Private/Admin
+const updateCompany = asyncHandler(async (req, res) => {
+  const { name, industry, description } = req.body;
+
+  const company = await Company.findById(req.params.id);
+
+  if (company) {
+    company.name = name || company.name;
+    company.industry = industry || company.industry;
+    company.description = description || company.description;
+
+    const updatedCompany = await company.save();
+    res.json(updatedCompany);
+  } else {
+    res.status(404);
+    throw new Error('Company not found');
   }
+});
+
+// @desc    Delete a company
+// @route   DELETE /api/companies/:id
+// @access  Private/Admin
+const deleteCompany = asyncHandler(async (req, res) => {
+  const company = await Company.findById(req.params.id);
+
+  if (company) {
+    await company.remove();
+    res.json({ message: 'Company removed' });
+  } else {
+    res.status(404);
+    throw new Error('Company not found');
+  }
+});
+
+module.exports = {
+  getCompanies,
+  getCompanyById,
+  createCompany,
+  updateCompany,
+  deleteCompany,
 };
