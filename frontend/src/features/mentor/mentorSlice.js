@@ -22,19 +22,23 @@ const mentorSlice = createSlice({
     loading: false,
     error: null,
   },
-  extraReducers: {
-    [fetchMentors.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [fetchMentors.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.mentors = action.payload;
-    },
-    [fetchMentors.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
+  reducers: {
+    // Add synchronous reducers if needed
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchMentors.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMentors.fulfilled, (state, action) => {
+        state.loading = false;
+        state.mentors = action.payload;
+      })
+      .addCase(fetchMentors.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

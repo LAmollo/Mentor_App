@@ -22,19 +22,23 @@ const companySlice = createSlice({
     loading: false,
     error: null,
   },
-  extraReducers: {
-    [fetchCompanies.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [fetchCompanies.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.companies = action.payload;
-    },
-    [fetchCompanies.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
+  reducers: {
+    // Add synchronous reducers if needed
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCompanies.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCompanies.fulfilled, (state, action) => {
+        state.loading = false;
+        state.companies = action.payload;
+      })
+      .addCase(fetchCompanies.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png'; 
 
-function Navbar() {
+const Navbar = () => {
   return (
     <nav>
-      <img src="/images/logo.png" alt="Logo" /> 
+      <div className="logo">
+        <img src={logo} alt="Logo" />
+      </div>
       <ul>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/about">About</Link></li>
@@ -13,6 +16,6 @@ function Navbar() {
       </ul>
     </nav>
   );
-}
+};
 
 export default Navbar;

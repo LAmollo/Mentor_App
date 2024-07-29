@@ -22,19 +22,23 @@ const studentSlice = createSlice({
     loading: false,
     error: null,
   },
-  extraReducers: {
-    [fetchStudents.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [fetchStudents.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.students = action.payload;
-    },
-    [fetchStudents.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
+  reducers: {
+    // Add synchronous reducers if needed
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchStudents.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchStudents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.students = action.payload;
+      })
+      .addCase(fetchStudents.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

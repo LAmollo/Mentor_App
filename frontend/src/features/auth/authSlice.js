@@ -39,31 +39,32 @@ const authSlice = createSlice({
       state.user = null;
     },
   },
-  extraReducers: {
-    [registerUser.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [registerUser.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.user = action.payload;
-    },
-    [registerUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    [loginUser.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [loginUser.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.user = action.payload;
-    },
-    [loginUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

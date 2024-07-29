@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Async Thunks
@@ -26,19 +26,19 @@ const matchSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchData.pending, (state) => {
+      .addCase(fetchMatches.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchData.fulfilled, (state, action) => {
-        state.data = action.payload;
+      .addCase(fetchMatches.fulfilled, (state, action) => {
+        state.matches = action.payload;
         state.loading = false;
       })
-      .addCase(fetchData.rejected, (state, action) => {
+      .addCase(fetchMatches.rejected, (state, action) => {
         state.error = action.error.message;
         state.loading = false;
       });
   },
 });
 
-export default exampleSlice.reducer;
+export default matchSlice.reducer;

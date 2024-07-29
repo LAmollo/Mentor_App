@@ -6,9 +6,12 @@ import App from './App';
 import './index.css';
 
 
-ReactDOM.render(
-  <Provider store={store}>
+// Create a root element using ReactDOM.createRoot
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// Render the App component into the root element
+root.render(
+  <React.StrictMode>
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
