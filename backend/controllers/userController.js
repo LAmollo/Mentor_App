@@ -1,70 +1,116 @@
+// controllers/userController.js
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const Company = require('../models/Company');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 // Register a new user
-exports.registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+exports.register = async (req, res) => {
   try {
+    const { name, email, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword });
-    await user.save();
-    res.status(201).json({ message: 'User registered successfully' });
+    const newUser = new User({ name, email, password: hashedPassword, role });
+    await newUser.save();
+    res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
 // Login a user
-exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+exports.login = async (req, res) => {
   try {
+    const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
 // Get user profile
-exports.getUserProfile = async (req, res) => {
+exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
 // Update user profile
-exports.updateUserProfile = async (req, res) => {
+exports.updateProfile = async (req, res) => {
   try {
-    const updatedProfile = await User.findByIdAndUpdate(
-      req.user.id,
-      { $set: req.body },
-      { new: true, runValidators: true }
-    ).select('-password');
-    res.json(updatedProfile);
+    const { profile } = req.body;
+    const user = await User.findByIdAndUpdate(req.user.id, { profile }, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
-// Delete user
-exports.deleteUser = async (req, res) => {
+// Get a specific user's profile by ID
+exports.getUserProfileById = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.user.id);
-    res.json({ message: 'User deleted successfully' });
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
+// Find potential mentors for a student
+exports.findPotentialMentors = async (req, res) => {
+  try {
+    const student = await User.findById(req.user.id);
+    if (!student || student.role !== 'student') {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    const potentialMentors = await User.find({
+      role: 'mentor',
+      'profile.interests': { $in: student.profile.interests },
+      'profile.location': student.profile.location
+    }).populate('profile');
+
+    res.json(potentialMentors);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// Assign a mentor to a student
+exports.assignMentorToStudent = async (req, res) => {
+  try {
+    const { mentorId } = req.body;
+    const student = await User.findById(req.user.id);
+    const mentor = await User.findById(mentorId);
+
+    if (!student || student.role !== 'student') {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    if (!mentor || mentor.role !== 'mentor') {
+      return res.status(404).json({ message: 'Mentor not found' });
+    }
+
+    student.matchedMentor = mentorId;
+    await student.save();
+
+    res.json({ message: 'Mentor successfully assigned to student', student });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};

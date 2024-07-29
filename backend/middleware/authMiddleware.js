@@ -1,22 +1,24 @@
+// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Company = require('../models/Company');
 
-exports.authMiddleware = async (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '');
+const authMiddleware = async (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
+    return res.status(401).json({ message: 'No token provided' });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.id;
-    req.user = await User.findById(req.user) || await Company.findById(req.user);
+    req.user = await User.findById(decoded.id);
     if (!req.user) {
-      return res.status(401).json({ message: 'Authorization denied' });
+      return res.status(401).json({ message: 'User not found' });
     }
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Token is not valid' });
+    res.status(400).json({ message: 'Invalid token' });
   }
 };
+
+module.exports = authMiddleware;

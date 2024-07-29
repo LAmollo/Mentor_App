@@ -1,12 +1,15 @@
+// routes/userRoutes.js
 const express = require('express');
-const { registerUser, loginUser, getUserProfile, updateUserProfile, deleteUser } = require('../controllers/userController');
-const { authMiddleware } = require('../middleware/authMiddleware');
 const router = express.Router();
+const { register, login, getProfile, updateProfile, getUserProfileById, findPotentialMentors, assignMentorToStudent } = require('../controllers/userController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-router.get('/profile', authMiddleware, getUserProfile);
-router.put('/profile', authMiddleware, updateUserProfile);
-router.delete('/profile', authMiddleware, deleteUser);
+router.post('/register', register);
+router.post('/login', login);
+router.get('/profile', authMiddleware, getProfile);
+router.put('/profile', authMiddleware, updateProfile);
+router.get('/:id', getUserProfileById);
+router.get('/potential-mentors', authMiddleware, findPotentialMentors);
+router.post('/assign-mentor', authMiddleware, assignMentorToStudent);
 
 module.exports = router;

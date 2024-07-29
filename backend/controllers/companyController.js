@@ -1,69 +1,52 @@
+// controllers/companyController.js
 const Company = require('../models/Company');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
-// Register a new company
-exports.registerCompany = async (req, res) => {
-  const { name, email, password, industry } = req.body;
+// Create a new company
+exports.createCompany = async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const company = new Company({ name, email, password: hashedPassword, industry });
+    const company = new Company(req.body);
     await company.save();
-    res.status(201).json({ message: 'Company registered successfully' });
+    res.status(201).json(company);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
-// Login a company
-exports.loginCompany = async (req, res) => {
-  const { email, password } = req.body;
+// Get a company by ID
+exports.getCompany = async (req, res) => {
   try {
-    const company = await Company.findOne({ email });
+    const company = await Company.findById(req.params.id);
     if (!company) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(404).json({ message: 'Company not found' });
     }
-    const isMatch = await bcrypt.compare(password, company.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-    const token = jwt.sign({ id: company._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-// Get company profile
-exports.getCompanyProfile = async (req, res) => {
-  try {
-    const company = await Company.findById(req.user.id).select('-password');
     res.json(company);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
-// Update company profile
-exports.updateCompanyProfile = async (req, res) => {
+// Update company information
+exports.updateCompany = async (req, res) => {
   try {
-    const updatedProfile = await Company.findByIdAndUpdate(
-      req.user.id,
-      { $set: req.body },
-      { new: true, runValidators: true }
-    ).select('-password');
-    res.json(updatedProfile);
+    const company = await Company.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+    res.json(company);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
 
-// Delete company
+// Delete a company
 exports.deleteCompany = async (req, res) => {
   try {
-    await Company.findByIdAndDelete(req.user.id);
-    res.json({ message: 'Company deleted successfully' });
+    const company = await Company.findByIdAndDelete(req.params.id);
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+    res.json({ message: 'Company deleted' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ error: error.message });
   }
 };
