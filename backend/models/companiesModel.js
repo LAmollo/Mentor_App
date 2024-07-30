@@ -1,52 +1,31 @@
-import mongoose, { Schema } from "mongoose";
-import validator from "validator";
+import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import JWT from "jsonwebtoken";
 
-const companySchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "Company Name is required"],
-  },
-  email: {
-    type: String,
-    required: [true, "Email is required"],
-    unique: true,
-    validate: validator.isEmail,
-  },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-    minlength: [6, "Password must be at least"],
-    select: true,
-  },
+const companySchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true, select: false },
   contact: { type: String },
   location: { type: String },
-  about: { type: String },
   profileUrl: { type: String },
-  jobPosts: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
+  about: { type: String },
+  jobPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
 });
 
-// middelwares
-companySchema.pre("save", async function () {
-  if (!this.isModified) return;
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+companySchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 12);
 });
 
-//compare password
-companySchema.methods.comparePassword = async function (userPassword) {
-  const isMatch = await bcrypt.compare(userPassword, this.password);
-  return isMatch;
+companySchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
-//JSON WEBTOKEN
 companySchema.methods.createJWT = function () {
-  return JWT.sign({ userId: this._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "1d",
+  return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_LIFETIME,
   });
 };
 
-const Companies = mongoose.model("Companies", companySchema);
-
-export default Companies;
+export default mongoose.model('Company', companySchema);
