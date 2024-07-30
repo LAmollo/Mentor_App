@@ -20,7 +20,7 @@ const About = () => {
 
       <div className='leading-8 px-5 text-justify'>
         <p>
-          Microsoft Corporation and its contributors are available at
+          Steer! Corporation and its contributors are available at
           http://www.microsoft.com and at http://www.microsoft.com for more
           information about the contributors and contributors to the Microsoft
           Corporation and its contributors to the Microsoft Corporation and its
