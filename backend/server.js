@@ -1,26 +1,51 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const authRoutes = require('./routes/authRoutes');
-const companyRoutes = require('./routes/companyRoutes');
-const mentorRoutes = require('./routes/mentorRoutes');
-const studentRoutes = require('./routes/studentRoutes');
-const matchRoutes = require('./routes/matchRoutes');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import morgan from 'morgan';
+import bodyParser from 'body-parser';
+import xss from 'xss-clean';
+import mongoSanitize from 'express-mongo-sanitize';
+import dbConnection from './dbConfig/dbConnection.js';
+import router from './routes/index.js';
+import errorMiddleware from './middlewares/errorMiddleware.js';
 
 dotenv.config();
 
-connectDB();
-
+// Create an instance of Express
 const app = express();
 
-app.use(express.json());
+// MongoDB Connection
+try {
+  dbConnection();
+} catch (error) {
+  console.error('Error connecting to the database:', error);
+}
 
-app.use('/api/auth', authRoutes);
-app.use('/api/companies', companyRoutes);
-app.use('/api/mentors', mentorRoutes);
-app.use('/api/students', studentRoutes);
-app.use('/api/match', matchRoutes);
+// Middleware
+app.use(cors());
+app.use(xss());
+app.use(mongoSanitize());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
-const PORT = process.env.PORT || 5001;
+// Routes
+app.use(router);
 
-app.listen(PORT, console.log(`Server running on port ${PORT}`));
+// Error Middleware
+app.use(errorMiddleware);
+
+// Define a route
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+
+// Start the server
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+}).on('error', (err) => {
+  console.error('Server error:', err);
+});
