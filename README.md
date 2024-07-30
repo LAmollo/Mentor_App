@@ -42,12 +42,13 @@ This application is designed to help students find suitable mentors and career o
 npm install
 npm run dev
 
-Frontend Setup
+### Frontend Setup
 Navigate to the frontend directory:
 bash
 Copy code
 cd ../frontend
-Install dependencies:
+
+### Install dependencies
 bash
 Copy code
 npm install
@@ -56,37 +57,45 @@ bash
 Copy code
 npm run dev
 
-API Endpoints
+### API Endpoints
 
-Authentication
+### Authentication
 POST /api/auth/register - Register a new user
 POST /api/auth/login - Login a user
-Students
+
+### Students
 GET /api/students - Get all students
 POST /api/students - Create a new student profile
 GET /api/students/:id - Get a student by ID
 PUT /api/students/:id - Update a student profile
 DELETE /api/students/:id - Delete a student profile
-Mentors
+
+### Mentors
 GET /api/mentors - Get all mentors
 POST /api/mentors - Create a new mentor profile
 GET /api/mentors/:id - Get a mentor by ID
 PUT /api/mentors/:id - Update a mentor profile
 DELETE /api/mentors/:id - Delete a mentor profile
-Companies
+
+### Companies
 GET /api/companies - Get all companies
 POST /api/companies - Create a new company profile
 GET /api/companies/:id - Get a company by ID
 PUT /api/companies/:id - Update a company profile
 DELETE /api/companies/:id - Delete a company profile
-Matching
+
+### Matching
 GET /api/match - Get matches between students and mentors
 Usage
 
 Register a new user or login with an existing account.
+
 Create or update your profile as a student, mentor, or company.
+
 Use the dashboard to manage your profile and view potential matches.
+
 Admins can manage all users and companies from the admin panel.
+
 Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request with your changes.
