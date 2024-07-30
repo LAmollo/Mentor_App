@@ -1,4 +1,4 @@
-# Student Career-Matching App
+# Career-Matching App
 
 ## Overview
 
