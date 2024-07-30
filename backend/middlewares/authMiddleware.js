@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Users from '../models/userModel.js';
 import Companies from '../models/companiesModel.js';
 
-export const authenticateUser = async (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
@@ -21,3 +21,5 @@ export const authenticateUser = async (req, res, next) => {
     res.status(401).json({ message: 'Unauthorized' });
   }
 };
+
+export default authenticateUser;
