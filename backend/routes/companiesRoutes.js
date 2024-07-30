@@ -1,39 +1,29 @@
-import express, { Router } from "express";
-import { rateLimit } from "express-rate-limit";
+import express from "express";
 import {
+  registerCompany,
+  signInCompany,
+  updateCompanyProfile,
+  getCompanyProfile,
   getCompanies,
   getCompanyById,
-  getCompanyJobListing,
-  getCompanyProfile,
-  register,
-  signIn,
-  updateCompanyProfile,
-} from "../controllers/companiesController.js";
-import userAuth from "../middlewares/authMiddleware.js";
+  createJob,
+  updateJob,
+  deleteJob,
+  getCompanyJobs,
+} from "../controllers/companyController.js";
+import { authenticateUser } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-//ip rate limit
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
-
-// REGISTER
-router.post("/register", limiter, register);
-
-// LOGIN
-router.post("/login", limiter, signIn);
-
-// GET DATA
-router.post("/get-company-profile", userAuth, getCompanyProfile);
-router.post("/get-company-joblisting", userAuth, getCompanyJobListing);
+router.post("/register", registerCompany);
+router.post("/signin", signInCompany);
+router.put("/profile", authenticateUser, updateCompanyProfile);
+router.get("/profile", authenticateUser, getCompanyProfile);
 router.get("/", getCompanies);
-router.get("/get-company/:id", getCompanyById);
-
-// UPDATE DATA
-router.put("/update-company", userAuth, updateCompanyProfile);
+router.get("/:id", getCompanyById);
+router.post("/job", authenticateUser, createJob);
+router.put("/job/:jobId", authenticateUser, updateJob);
+router.delete("/job/:jobId", authenticateUser, deleteJob);
+router.get("/jobs/:id", getCompanyJobs);
 
 export default router;

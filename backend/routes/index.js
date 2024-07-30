@@ -1,17 +1,26 @@
 import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import authRoutes from "./routes/authRoutes.js";
+import companyRoutes from "./routes/companyRoutes.js";
 
-import authRoute from "./authRoutes.js";
-import userRoute from "./userRoutes.js";
-import companyRoute from "./companiesRoutes.js";
-import jobRoute from "./jobsRoutes.js";
+dotenv.config();
+const app = express();
 
-const router = express.Router();
+app.use(express.json());
 
-const path = "/api-v1/";
+app.use("/api/auth", authRoutes);
+app.use("/api/companies", companyRoutes);
 
-router.use(`${path}auth`, authRoute); //api-v1/auth/
-router.use(`${path}users`, userRoute);
-router.use(`${path}companies`, companyRoute);
-router.use(`${path}jobs`, jobRoute);
+const port = process.env.PORT || 5000;
 
-export default router;
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error(err));
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
