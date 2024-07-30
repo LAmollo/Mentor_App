@@ -1,42 +1,21 @@
 import Users from "../models/userModel.js";
 
-export const register = async (req, res, next) => {
+// Register a new user
+export const registerUser = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
-  //validate fileds
-
-  if (!firstName) {
-    next("First Name is required");
-  }
-  if (!email) {
-    next("Email is required");
-  }
-  if (!lastName) {
-    next("Last Name is required");
-  }
-  if (!password) {
-    next("Password is required");
+  if (!firstName || !email || !lastName || !password) {
+    return next("All fields are required");
   }
 
   try {
     const userExist = await Users.findOne({ email });
+    if (userExist) return next("Email Address already exists");
 
-    if (userExist) {
-      next("Email Address already exists");
-      return;
-    }
-
-    const user = await Users.create({
-      firstName,
-      lastName,
-      email,
-      password,
-    });
-
-    // user token
+    const user = await Users.create({ firstName, lastName, email, password });
     const token = await user.createJWT();
 
-    res.status(201).send({
+    res.status(201).json({
       success: true,
       message: "Account created successfully",
       user: {
@@ -50,41 +29,29 @@ export const register = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-export const signIn = async (req, res, next) => {
+// Sign in an existing user
+export const signInUser = async (req, res, next) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return next("Please Provide User Credentials");
+  }
+
   try {
-    //validation
-    if (!email || !password) {
-      next("Please Provide AUser Credentials");
-      return;
-    }
-
-    // find user by email
     const user = await Users.findOne({ email }).select("+password");
+    if (!user) return next("Invalid email or password");
 
-    if (!user) {
-      next("Invalid -email or password");
-      return;
-    }
-
-    // compare password
     const isMatch = await user.comparePassword(password);
-
-    if (!isMatch) {
-      next("Invalid email or password");
-      return;
-    }
+    if (!isMatch) return next("Invalid email or password");
 
     user.password = undefined;
-
     const token = user.createJWT();
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "Login successfully",
       user,
@@ -92,6 +59,6 @@ export const signIn = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };

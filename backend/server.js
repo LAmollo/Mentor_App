@@ -1,4 +1,5 @@
-import express from 'express';
+
+import express, { Route } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -8,6 +9,11 @@ import mongoSanitize from 'express-mongo-sanitize';
 import dbConnection from './dbConfig/dbConnection.js';
 import router from './routes/index.js';
 import errorMiddleware from './middlewares/errorMiddleware.js';
+import routerAuth from './routes/authRoutes.js';
+// import companyRoutes from './routes/companyRoutes.jsjs';
+import userRoutes from './routes/userRoutes.js';
+import jobRoutes from './routes/jobRoutes.js';
+
 
 dotenv.config();
 
@@ -32,8 +38,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Routes
-app.use(router);
-
+app.use('/api/auth',routerAuth);
+// app.use('/api/companies',companiesRoutes);
+app.use('/api/user',userRoutes);
+app.use('/api/jobs',jobRoutes);
 // Error Middleware
 app.use(errorMiddleware);
 
@@ -43,7 +51,7 @@ app.get('/', (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 }).on('error', (err) => {

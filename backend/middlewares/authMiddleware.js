@@ -1,26 +1,23 @@
-import JWT from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+import Users from '../models/userModel.js';
+import Companies from '../models/companiesModel.js';
 
-const userAuth = async (req, res, next) => {
-  const authHeader = req?.headers?.authorization;
-
-  if (!authHeader || !authHeader?.startsWith("Bearer")) {
-    next("Authentication== failed");
+export const authenticateUser = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
-
-  const token = authHeader?.split(" ")[1];
 
   try {
-    const userToken = JWT.verify(token, process.env.JWT_SECRET_KEY);
-
-    req.body.user = {
-      userId: userToken.userId,
-    };
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    const user = await Users.findById(decoded.userId);
+    if (!user) {
+      const company = await Companies.findById(decoded.userId);
+      if (!company) return res.status(401).json({ message: 'Unauthorized' });
+    }
     next();
   } catch (error) {
-    console.log(error);
-    next("Authentication failed");
+    res.status(401).json({ message: 'Unauthorized' });
   }
 };
-
-export default userAuth;
